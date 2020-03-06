@@ -30,9 +30,9 @@ router.get("/me", auth, async (req, res) => {
   }
 });
 
-// @route   POST api/profile
-// @desc    Create or update user profile
-// @access  Private
+// @route    POST api/profile
+// @desc     Create or update user profile
+// @access   Private
 router.post(
   "/",
   [
@@ -49,22 +49,21 @@ router.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ error: errors.array() });
+      return res.status(400).json({ errors: errors.array() });
     }
-
     const {
       company,
-      website,
       location,
+      website,
       bio,
+      skills,
       status,
       githubusername,
-      skills,
       youtube,
-      facebook,
       twitter,
       instagram,
-      linkedin
+      linkedin,
+      facebook
     } = req.body;
 
     const profileFields = {
@@ -90,29 +89,17 @@ router.post(
     profileFields.social = socialfields;
 
     try {
-      let profile = await Profile.findOne({ user: req.user.id });
-
-      // If found, update profile
-      if (profile) {
-        profile = await Profile.findOneAndUpdate(
-          { user: req.user.id },
-          { $set: profileFields },
-          { new: true }
-        );
-
-        return res.json(profile);
-      }
-
-      // Otherwise create profile
-      profile = new Profile(profileFields);
-
-      await profile.save();
+      // Using upsert option (creates new doc if no match is found):
+      let profile = await Profile.findOneAndUpdate(
+        { user: req.user.id },
+        { $set: profileFields },
+        { new: true, upsert: true }
+      );
       res.json(profile);
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Server error");
+      res.status(500).send("Server Error");
     }
-    res.send("success");
   }
 );
 
