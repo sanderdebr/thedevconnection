@@ -22,7 +22,6 @@ export const getCurrentProfile = () => async dispatch => {
 };
 
 // Create or update profile
-
 export const createProfile = (
   formData,
   history,
