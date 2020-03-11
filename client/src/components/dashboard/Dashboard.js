@@ -16,15 +16,15 @@ const Dashboard = ({
 }) => {
   useEffect(() => {
     getCurrentProfile();
-  }, []);
+  }, [getCurrentProfile]);
 
   return loading && profile === null ? (
     <Spinner />
   ) : (
     <Fragment>
       <h1 className="large text-primary">Dashboard</h1>
-      <p className="">
-        <i className="fas fa-user"></i> Welcome {user && user.name}
+      <p className="lead">
+        <i className="fas fa-user" /> Welcome {user && user.name}
       </p>
       {profile !== null ? (
         <Fragment>
@@ -34,7 +34,7 @@ const Dashboard = ({
 
           <div className="my-2">
             <button className="btn btn-danger" onClick={() => deleteAccount()}>
-              <i className="fas fa-user-minus"></i> Delete my account
+              <i className="fas fa-user-minus" /> Delete My Account
             </button>
           </div>
         </Fragment>
