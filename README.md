@@ -8,3 +8,6 @@ Includes authentication, profiles and forum posts.
 - Github API
 - React and redux for frontend
 - Deployed on Heroku
+
+Live:
+https://polar-gorge-87127.herokuapp.com/
