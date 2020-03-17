@@ -8,9 +8,9 @@ const { check, validationResult } = require("express-validator");
 
 const User = require("../../models/User");
 
-// @route   POST api/users
-// @desc    Register user
-// @access  Public
+// @route    POST api/users
+// @desc     Register user
+// @access   Public
 router.post(
   "/",
   [
@@ -21,9 +21,7 @@ router.post(
     check(
       "password",
       "Please enter a password with 6 or more characters"
-    ).isLength({
-      min: 6
-    })
+    ).isLength({ min: 6 })
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -36,7 +34,6 @@ router.post(
     try {
       let user = await User.findOne({ email });
 
-      // Check if user exists
       if (user) {
         return res
           .status(400)
@@ -56,15 +53,12 @@ router.post(
         password
       });
 
-      // Generate password
       const salt = await bcrypt.genSalt(10);
 
       user.password = await bcrypt.hash(password, salt);
 
-      // Store user in DB
       await user.save();
 
-      // Add JWT
       const payload = {
         user: {
           id: user.id
